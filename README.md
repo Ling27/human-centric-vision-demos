@@ -2,6 +2,8 @@
 
 Interactive research demos for **Controllable and Structure-Aware Human-Centric Image Synthesis**, organized across three visual scales:
 
+## [Open the live research demos →](https://ling27.github.io/human-centric-vision-demos/)
+
 - **Body — HRHuman:** tuning-free higher-resolution human image generation with human template knowledge.
 - **Face — FaceComposer:** reference-based facial component transfer with coherent source context.
 - **Skin — Facial Pore Simulation:** realistic short-term pore change visualization based on clinical observations.
