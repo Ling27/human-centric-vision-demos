@@ -30,6 +30,7 @@ const status = document.querySelector('#result-status');
 const slider = document.querySelector('#comparison-slider');
 const beforeLayer = document.querySelector('#before-layer');
 const divider = document.querySelector('#divider');
+const dividerHandle = document.querySelector('#divider-handle');
 
 let activeCase = 'case-01';
 let renderToken = 0;
@@ -112,6 +113,20 @@ function updateSlider() {
   const value = Number(slider.value);
   beforeLayer.style.clipPath = `inset(0 ${100 - value}% 0 0)`;
   divider.style.left = `${value}%`;
+  dividerHandle.setAttribute('aria-valuenow', String(Math.round(value)));
+}
+
+function moveDivider(event) {
+  const box = divider.parentElement.getBoundingClientRect();
+  slider.value = String(Math.max(0, Math.min(100, ((event.clientX - box.left) / box.width) * 100)));
+  updateSlider();
+}
+
+function startDividerDrag(event) {
+  if (event.button !== undefined && event.button !== 0) return;
+  event.preventDefault();
+  dividerHandle.setPointerCapture(event.pointerId);
+  moveDivider(event);
 }
 
 checkboxes.forEach((checkbox) => checkbox.addEventListener('change', renderSelection));
@@ -120,7 +135,16 @@ caseButtons.forEach((button) => button.addEventListener('click', () => {
   updateCaseControls();
   renderSelection();
 }));
-slider.addEventListener('input', updateSlider);
+dividerHandle.addEventListener('pointerdown', startDividerDrag);
+dividerHandle.addEventListener('pointermove', (event) => {
+  if (dividerHandle.hasPointerCapture(event.pointerId)) moveDivider(event);
+});
+dividerHandle.addEventListener('keydown', (event) => {
+  if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  slider.value = String(Number(slider.value) + (event.key === 'ArrowRight' ? 1 : -1));
+  updateSlider();
+});
 
 updateCaseControls();
 updateSlider();
