@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Controllable and Structure-Aware Human-Centric Image Synthesis across body, face, and skin scales.">
+  <title>Human-Centric Image Synthesis · Ling Li</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2242%22 fill=%22%231b6552%22/><path d=%22M30 65V35h9v11h22V35h9v30h-9V54H39v11z%22 fill=%22white%22/></svg>">
+  <link rel="stylesheet" href="main-styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top">Ling Li · Thesis Demos</a>
+    <nav aria-label="Main navigation"><a href="#thesis">Thesis</a><a href="#projects">Projects</a><a href="#research-thread">Research thread</a></nav>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div class="hero-copy">
+        <p class="kicker">Doctoral research · Human-centric visual synthesis</p>
+        <h1>Controllable and Structure-Aware Human-Centric Image Synthesis</h1>
+        <p class="hero-text">Three studies examine how human-specific priors can guide visual synthesis at progressively finer scales: the complete body, localized facial components, and skin microstructure.</p>
+        <a class="primary-link" href="#projects">Explore the three projects <span>↓</span></a>
+      </div>
+      <div class="scale-figure" aria-label="Research scale from body to skin">
+        <a href="#hrhuman" class="scale-slice body-slice"><img src="HRHuman/case-03/1k.png" alt="High-resolution full-body generation"><span><b>Body</b>Global structure</span></a>
+        <a href="#facecomposer" class="scale-slice face-slice"><img src="faceComposer/case-01/01628_04393_eyebrows_eyes_mouth_nose.png" alt="Reference-based face composition"><span><b>Face</b>Local components</span></a>
+        <a href="#pore" class="scale-slice skin-slice"><img src="FacialPoreSimulation/cases/a-tw30-simulated.png" alt="Facial pore simulation"><span><b>Skin</b>Microstructure</span></a>
+      </div>
+    </section>
+
+    <section id="thesis" class="thesis-section">
+      <div class="shell thesis-grid">
+        <div><p class="section-number">01 · Thesis question</p><h2>How can controlled changes preserve the human priors that matter at each visual scale?</h2></div>
+        <div class="thesis-answer"><p>Generic image generation optimizes semantic correctness and overall plausibility. Human content demands more: small structural or appearance inconsistencies are immediately noticeable.</p><p>This thesis treats body, face, and skin as distinct control problems. Each level requires a different representation of what must remain coherent while the target region changes.</p></div>
+      </div>
+      <div class="shell scale-row" aria-label="Scale-dependent research challenges">
+        <div><span>Body level</span><strong>Anatomical coherence</strong><small>Preserve whole-body structure while adding high-resolution local detail.</small></div>
+        <div><span>Face level</span><strong>Component compatibility</strong><small>Transfer selected identity features without breaking the surrounding portrait.</small></div>
+        <div><span>Skin level</span><strong>Subtle local realism</strong><small>Express pore-level change without modifying non-pore facial regions.</small></div>
+      </div>
+    </section>
+
+    <section id="projects" class="projects-section">
+      <div class="shell section-heading"><p class="section-number">02 · Research projects</p><h2>One research thread, three levels of control</h2></div>
+
+      <article id="hrhuman" class="project shell">
+        <div class="project-copy">
+          <div class="project-meta"><span>01</span><span>Body scale</span></div>
+          <h3>HRHuman</h3>
+          <p class="project-title">Tuning-Free Higher-Resolution Human Image Generation</p>
+          <p>Patch-wise generation gains detail but can fragment the human body. HRHuman uses prompt discretization and template-guided prompt filtering to align each local denoising region with the correct body semantics.</p>
+          <div class="constraint"><span>Preserve</span><strong>Global anatomy</strong><span>Control</span><strong>Region-aware detail</strong></div>
+          <a class="project-link" href="HRHuman/index.html">Open interactive demo <span>↗</span></a>
+        </div>
+        <a class="project-visual" href="HRHuman/index.html" aria-label="Open HRHuman demo"><img loading="lazy" src="HRHuman/assets/teaser.png" alt="HRHuman 2K and 4K generation examples"><span>2K · 4K · Higher resolution</span></a>
+      </article>
+
+      <article id="facecomposer" class="project shell reverse">
+        <div class="project-copy">
+          <div class="project-meta"><span>02</span><span>Face scale</span></div>
+          <h3>FaceComposer</h3>
+          <p class="project-title">Reference-Based Coherent and Realistic Face Composition</p>
+          <p>Selected eyes, eyebrows, nose, or mouth must reflect the reference while remaining compatible with the source face. Component-aware training and boundary supervision improve feature fidelity and transition smoothness without paired ground-truth composites.</p>
+          <div class="constraint"><span>Preserve</span><strong>Source context</strong><span>Control</span><strong>Reference components</strong></div>
+          <a class="project-link" href="faceComposer/index.html">Open interactive demo <span>↗</span></a>
+        </div>
+        <a class="project-visual contain" href="faceComposer/index.html" aria-label="Open FaceComposer demo"><img loading="lazy" src="faceComposer/assets/qualitative-comparison.webp" alt="FaceComposer qualitative comparison"><span>Eyes · Eyebrows · Nose · Mouth</span></a>
+      </article>
+
+      <article id="pore" class="project shell">
+        <div class="project-copy">
+          <div class="project-meta"><span>03</span><span>Skin scale</span></div>
+          <h3>Facial Pore Simulation</h3>
+          <p class="project-title">Realistic Short-Term Skincare Effect Visualization</p>
+          <p>Clinical observations contain strong daily fluctuations, while pore changes remain small and local. The pipeline combines temporal data cleaning, UNet segmentation, Random Forest regression, and local deformation to simulate change over time.</p>
+          <div class="constraint"><span>Preserve</span><strong>Non-pore regions</strong><span>Control</span><strong>Temporal pore change</strong></div>
+          <a class="project-link" href="FacialPoreSimulation/index.html">Open interactive demo <span>↗</span></a>
+        </div>
+        <a class="project-visual contain" href="FacialPoreSimulation/index.html" aria-label="Open Facial Pore Simulation demo"><img loading="lazy" src="FacialPoreSimulation/assets/simulation-overview.png" alt="Real and simulated pore changes across subjects and time windows"><span>Day 10 · Day 20 · Day 30</span></a>
+      </article>
+    </section>
+
+    <section id="research-thread" class="thread-section">
+      <div class="shell">
+        <div class="section-heading"><p class="section-number">03 · Research thread</p><h2>Scale-dependent structure guides controlled synthesis</h2></div>
+        <div class="thread-line">
+          <div><b>Human template</b><span>Body-region semantics guide patch-wise generation.</span></div><i>Body</i>
+          <div><b>Component awareness</b><span>Facial geometry and boundaries guide reference transfer.</span></div><i>Face</i>
+          <div><b>Pore localization</b><span>Clinical trends and segmentation guide local deformation.</span></div><i>Skin</i>
+        </div>
+        <p class="closing">Across all three studies, task-specific structure determines where change is allowed and what the synthesis process must preserve.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="shell"><strong>Ling Li</strong><span>Controllable and Structure-Aware Human-Centric Image Synthesis</span><a href="#top">Back to top ↑</a></div></footer>
+  <script src="main-app.js"></script>
+</body>
+</html>

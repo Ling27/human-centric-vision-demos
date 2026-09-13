@@ -1,0 +1,5 @@
+    {
+        "full": "a woman wearing a blue and white nike sweatshirt with a heart",
+        "body_structure": "a woman",
+        "tops": "a woman wearing a blue and white nike sweat shirt"
+    },

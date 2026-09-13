@@ -1,0 +1,11 @@
+.DS_Store
+**/.DS_Store
+.sites-runtime/
+
+# Local preprocessing utilities and intermediate exports
+HRHuman/interpolate.py
+FacialPoreSimulation/crop.py
+FacialPoreSimulation/cases_/
+FacialPoreSimulation/1.png
+FacialPoreSimulation/2.png
+FacialPoreSimulation/3.png

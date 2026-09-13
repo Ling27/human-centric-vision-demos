@@ -1,0 +1,4 @@
+    {
+        "full": "there is a woman with a scarf on her head looking at the camera",
+        "body_structure": "a woman"
+    },

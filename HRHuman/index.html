@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="HRHuman: tuning-free higher-resolution human image generation via template knowledge." />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23172420'/%3E%3Cpath d='M15 17v30M49 17v30M15 32h34' stroke='%23fff' stroke-width='7'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%2378a590'/%3E%3C/svg%3E" />
+    <title>HRHuman — Project Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="comparison-mode.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top">HRHuman</a>
+      <nav aria-label="Primary navigation">
+        <a href="#task">Task</a><a href="#demo">Demo</a><a href="#method">Method</a><a href="#evaluation">Evaluation</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="paper-header container">
+        <p class="venue">IEEE ISCAS 2025</p>
+        <h1>HRHuman: Tuning-Free Higher-Resolution Human Image Generation via Template Knowledge</h1>
+        <p class="authors">Ling Li, Lanqing Guo, Siyuan Yang, Qian Zheng, Yakun Ju, Weisi Lin, Alex C. Kot</p>
+        <div class="link-row"><a class="primary-link" href="#demo">Interactive demo</a><a href="assets/HRHuman-paper.pdf" target="_blank">Paper</a></div>
+        <p class="summary">HRHuman extends a pretrained 1K text-to-image model to 2K, 3K, and 4K human-centric generation without model fine-tuning, using human template knowledge to preserve structure during patch-wise denoising.</p>
+      </section>
+
+      <section class="section task-section" id="task">
+        <div class="container">
+          <div class="section-title"><span>01</span><h2>Task and motivation</h2></div>
+          <div class="task-definition">
+            <div><h3>Higher-resolution human generation</h3><p>Given a text prompt and a low-resolution SDXL result, synthesize a coherent human image at 2K, 3K, or 4K while retaining global composition and fine local detail.</p></div>
+            <div class="task-formula"><span>Prompt</span><b>+</b><span>1K image</span><b>+</b><span>human template</span><b>→</b><span>2K–4K image</span></div>
+          </div>
+          <div class="motivation-grid">
+            <article><h3>Why higher resolution?</h3><p>Entertainment, media, and fashion require human images with details that remain credible when viewed or printed at large scale.</p></article>
+            <article><h3>Why is it difficult?</h3><p>Patch-wise upscaling can repeat people or body parts, distort anatomy, and lose the relationship between local regions and the global prompt.</p></article>
+            <article><h3>What is the constraint?</h3><p>The method must work with existing diffusion models without additional parameter tuning while balancing global structure and local fidelity.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="demo">
+        <div class="container">
+          <div class="section-title"><span>02</span><h2>Interactive resolution explorer</h2></div>
+          <p class="section-lead">View the original generation at 1K. At 2K, 3K, or 4K, drag the divider with the left mouse button to compare standard OpenCV interpolation with the HRHuman result. After zooming, double-click a region to center it.</p>
+
+          <div class="prompt-panel">
+            <div class="prompt-main"><span>Input prompt</span><p id="full-prompt">“There is a woman with a scarf on her head looking at the camera.”</p></div>
+            <div class="prompt-parts" id="prompt-parts" aria-label="Region-specific prompt"><span><b>Body structure</b> a woman</span></div>
+          </div>
+
+          <div class="demo-grid">
+            <aside class="demo-controls">
+              <div class="control-group">
+                <p class="control-label">Demo case</p>
+                <div class="case-options" role="group" aria-label="Demo case">
+                  <button class="active" type="button" data-case="01" aria-pressed="true">01</button><button type="button" data-case="02" aria-pressed="false">02</button><button type="button" data-case="03" aria-pressed="false">03</button><button type="button" data-case="04" aria-pressed="false">04</button>
+                </div>
+              </div>
+              <div class="control-group">
+                <p class="control-label">Output resolution</p>
+                <div class="resolution-options" role="group" aria-label="Output resolution">
+                  <button type="button" data-resolution="1k" aria-pressed="false"><strong>1K</strong><span>1024² · Base</span></button>
+                  <button type="button" data-resolution="2k" aria-pressed="false"><strong>2K</strong><span>2048² · 4× pixels</span></button>
+                  <button type="button" data-resolution="3k" aria-pressed="false"><strong>3K</strong><span>3072² · 9× pixels</span></button>
+                  <button class="active" type="button" data-resolution="4k" aria-pressed="true"><strong>4K</strong><span>4096² · 16× pixels</span></button>
+                </div>
+              </div>
+              <div class="control-group zoom-control">
+                <label for="zoom-range"><span>Detail zoom</span><output id="zoom-value">1.0×</output></label>
+                <input id="zoom-range" type="range" min="1" max="3" step="0.25" value="1" />
+              </div>
+              <figure class="template-card">
+                <button id="template-button" type="button" aria-expanded="false"><img id="template-thumbnail" src="case-01/seg.png" alt="Sapiens human-part segmentation map for Case 01" /><span>Inspect human template</span></button>
+                <figcaption>Sapiens separates semantic body regions used to filter prompts for local patches.</figcaption>
+              </figure>
+            </aside>
+
+            <div class="viewer-panel">
+              <div class="viewer-heading"><h3 id="case-title">Case 01</h3><span id="resolution-status">4096 × 4096 · 16× pixels</span></div>
+              <div class="comparison" id="comparison">
+                <div class="zoom-stage" id="zoom-stage">
+                  <img id="output-image" src="case-01/4k.png" alt="HRHuman output at 4096 by 4096 resolution" />
+                  <div class="before-layer" id="before-layer"><img id="baseline-image" src="case-01/4k_cv2.png" alt="OpenCV interpolation at 4096 by 4096 resolution" /></div>
+                </div>
+                <div class="divider" id="divider" role="slider" tabindex="0" aria-label="Comparison divider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="46"><span>↔</span></div>
+                <span class="comparison-label before-label" id="before-label">OpenCV interpolation</span><span class="comparison-label after-label" id="after-label">HRHuman · 4K</span>
+                <div class="loading-overlay" id="loading-overlay"><span></span><p>Loading full-resolution result</p></div>
+              </div>
+              <label class="compare-range" id="compare-range" for="compare-slider"><span id="range-before-label">OpenCV interpolation</span><input id="compare-slider" type="range" min="0" max="100" value="46" /><span id="range-output-label">HRHuman · 4K</span></label>
+              <p class="viewer-note" id="viewer-note">Drag the divider with the left mouse button. After zooming, double-click to center a region for closer inspection.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <dialog id="template-dialog"><button class="dialog-close" type="button" aria-label="Close template view">×</button><img id="template-dialog-image" src="case-01/seg.png" alt="Enlarged Sapiens human-part segmentation map for Case 01" /><div><h3>Human template knowledge</h3><p>The semantic map identifies body regions such as hair, face, upper clothing, arms, hands, and trousers. For each sampled local patch, HRHuman retrieves only the matching prompt segments to construct its local guidance.</p></div></dialog>
+
+      <section class="section method-section" id="method">
+        <div class="container">
+          <div class="section-title"><span>03</span><h2>Method</h2></div>
+          <p class="section-lead">HRHuman augments patch-wise diffusion with region-aware text guidance while retaining a parallel global path for structural consistency.</p>
+          <figure class="paper-figure pipeline"><a href="assets/framework.png" target="_blank"><img src="assets/framework.png" alt="HRHuman framework with prompt discretization, semantic segmentation, and parallel denoising" /></a><figcaption>Overall framework. Click to inspect the original figure.</figcaption></figure>
+          <div class="method-grid">
+            <article><span>A</span><h3>Prompt Discretization</h3><p>The global prompt is decomposed into segments describing the background, body structure, clothing, and human parts.</p></article>
+            <article><span>B</span><h3>Template-guided Filtering</h3><p>Sapiens extracts human-part semantics. Each local patch receives only prompt segments aligned with the regions it contains.</p></article>
+            <article><span>C</span><h3>Local + Global Denoising</h3><p>Shifted-crop local sampling preserves detail, while dilated global sampling maintains composition. Their predictions are merged at each step.</p></article>
+          </div>
+          <div class="implementation-strip"><div><strong>Tuning-free</strong><span>No model parameter updates</span></div><div><strong>SDXL</strong><span>Pretrained 1K base model</span></div><div><strong>2K–4K</strong><span>4× to 16× pixel counts</span></div><div><strong>20 classes</strong><span>Human-part prompt labels</span></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="evaluation">
+        <div class="container">
+          <div class="section-title"><span>04</span><h2>Results and evaluation</h2></div>
+          <p class="section-lead">Experiments compare tuning-free higher-resolution generation methods on 1,000 human-centric prompts sampled from LAION-5B.</p>
+          <article class="result-block"><div class="result-copy"><p class="result-index">4.1</p><h3>Higher-resolution examples</h3><p>HRHuman produces human-centric images at 2K and 4K with coherent structure and details that remain visible when enlarged.</p></div><figure class="paper-figure"><a href="assets/teaser.png" target="_blank"><img src="assets/teaser.png" alt="HRHuman examples at 2048 and 4096 resolution" /></a><figcaption>Paper Fig. 1 — 2K and 4K generation examples.</figcaption></figure></article>
+          <article class="result-block"><div class="result-copy"><p class="result-index">4.2</p><h3>Qualitative comparison</h3><p>Compared with SDXL direct inference, ScaleCrafter, and DemoFusion, HRHuman reduces repeated figures and improves hands, footwear, clothing, and global body structure.</p></div><figure class="paper-figure comparison-figure"><a href="assets/comparison.png" target="_blank"><img src="assets/comparison.png" alt="Qualitative comparison between SDXL, ScaleCrafter, DemoFusion, and HRHuman" /></a><figcaption>Paper Fig. 3 — A: SDXL, B: ScaleCrafter, C: DemoFusion, D: HRHuman at 4K.</figcaption></figure></article>
+          <article class="result-block"><div class="result-copy"><p class="result-index">4.3</p><h3>Quantitative evaluation</h3><p>At 4K, HRHuman obtains the best FID and KID. At 2K, it achieves the best FID and ties for the best CLIP score.</p></div><div class="table-wrap"><table><thead><tr><th rowspan="2">Method</th><th colspan="3">2048²</th><th colspan="3">4096²</th></tr><tr><th>FID ↓</th><th>KID ↓</th><th>CLIP ↑</th><th>FID ↓</th><th>KID ↓</th><th>CLIP ↑</th></tr></thead><tbody><tr><td>SDXL-DI</td><td>92.40</td><td>0.0333</td><td>16.31</td><td>224.76</td><td>0.1354</td><td>15.41</td></tr><tr><td>SDXL+BSRGAN</td><td>67.23</td><td>0.0186</td><td><u>17.27</u></td><td>67.16</td><td>0.0186</td><td><u>17.35</u></td></tr><tr><td>ScaleCrafter</td><td>67.79</td><td>0.0162</td><td><strong>17.28</strong></td><td>86.03</td><td>0.0288</td><td><strong>17.56</strong></td></tr><tr><td>DemoFusion</td><td><u>62.14</u></td><td><strong>0.0130</strong></td><td>17.19</td><td><u>62.47</u></td><td><u>0.0124</u></td><td>17.22</td></tr><tr class="ours"><td>HRHuman</td><td><strong>62.04</strong></td><td><u>0.0133</u></td><td><strong>17.28</strong></td><td><strong>61.73</strong></td><td><strong>0.0123</strong></td><td>17.29</td></tr></tbody></table><p>Best in bold; second-best underlined.</p></div></article>
+        </div>
+      </section>
+    </main>
+
+    <footer><div class="container"><strong>HRHuman</strong><span>Tuning-free higher-resolution human image generation · ISCAS 2025</span><a href="assets/HRHuman-paper.pdf" target="_blank">Paper ↗</a></div></footer>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Interactive project page for short-term facial pore simulation.">
+  <title>Facial Pore Simulation</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2242%22 fill=%22%231f6b55%22/><circle cx=%2250%22 cy=%2250%22 r=%2212%22 fill=%22white%22/></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="playground-layout.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top">Facial Pore Simulation</a>
+    <nav aria-label="Main navigation">
+      <a href="#task">Task</a><a href="#demo">Demo</a><a href="#method">Method</a><a href="#evaluation">Evaluation</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <p class="eyebrow">Electronic Imaging 2023 · Research Project</p>
+      <h1>Evaluating the Efficacy of Skincare Product: A Realistic Short-Term Facial Pore Simulation</h1>
+      <p class="authors">Ling Li, Bandara Dissanayake, Tatsuya Omotezako, Yunjie Zhong, Qing Zhang, Rizhao Cai, Qian Zheng, Dennis Sng, Weisi Lin, Yufei Wang, Alex C. Kot</p>
+      <p class="lead">A data-driven system that predicts and visualizes subtle, time-dependent facial pore changes while preserving the surrounding facial structure.</p>
+      <div class="hero-actions"><a class="button primary" href="#demo">Try the demo</a><a class="button" href="assets/FacialPoreSimulation-paper.pdf" target="_blank">Read paper ↗</a></div>
+    </section>
+
+    <section id="task" class="section wrap">
+      <div class="section-head"><span>01</span><h2>Task &amp; motivation</h2></div>
+      <div class="task-grid">
+        <article><h3>The task</h3><p>Given a subject’s initial facial image and a target time window, simulate the local appearance of pores after short-term skincare use.</p></article>
+        <article><h3>Why it matters</h3><p>Computer vision for skin has focused mainly on medical lesion analysis, while cosmetic applications remain comparatively limited. A realistic preview makes gradual skincare changes easier to inspect.</p></article>
+        <article><h3>Why it is difficult</h3><p>Pores have delicate shapes and sizes, require high-quality images, and respond strongly to lighting. Daily fluctuation obscures the treatment trend, while every subject starts from a different skin condition.</p></article>
+      </div>
+      <div class="requirements"><strong>A useful simulation must</strong><span>modify all visible pores</span><span>match the observed degree of change</span><span>leave non-pore regions unchanged</span></div>
+      <p class="disclaimer">Research visualization only. The simulation does not provide medical advice or guarantee product efficacy for an individual.</p>
+    </section>
+
+    <section id="demo" class="section section-tint">
+      <div class="wrap">
+        <div class="section-head"><span>02</span><h2>Interactive comparison</h2></div>
+        <p class="section-intro">Select a participant and time window, then drag the divider to compare the observed image with the simulated result.</p>
+        <div class="playground">
+          <aside class="controls">
+            <fieldset><legend>Subject</legend><div class="segmented" id="subject-controls"><button class="active" data-subject="a">A</button><button data-subject="b">B</button><button data-subject="c">C</button></div></fieldset>
+            <fieldset><legend>Time window</legend><div class="segmented" id="time-controls"><button class="active" data-time="tw10">Day 10</button><button data-time="tw20">Day 20</button><button data-time="tw30">Day 30</button></div></fieldset>
+            <div class="zoom-control"><label class="zoom-label" for="zoom">Zoom <output id="zoom-value">1.0×</output></label><input id="zoom" type="range" min="1" max="2.5" step="0.1" value="1"></div>
+          </aside>
+          <div class="baseline-panel">
+            <p class="panel-label">Initial condition</p>
+            <div class="baseline"><img id="baseline-image" src="cases/a-baseline.png" alt="Initial facial image for Subject A"></div>
+            <div class="viewer-note"><strong>Baseline image</strong><span>Before skincare use</span></div>
+          </div>
+          <div class="viewer-column">
+            <p class="panel-label">Target condition</p>
+            <div class="compare" id="compare" style="--position:50%;--zoom:1">
+              <img id="sim-image" class="compare-image" src="cases/a-tw10-simulated.png" alt="Simulated result">
+              <div class="real-layer"><img id="real-image" class="compare-image" src="cases/a-tw10-real.png" alt="Real observation"></div>
+              <span class="tag tag-left">Real</span><span class="tag tag-right">Simulated</span><div class="divider" aria-hidden="true"></div>
+              <input id="comparison-slider" aria-label="Compare real and simulated images" type="range" min="0" max="100" value="50">
+            </div>
+            <div class="viewer-note"><strong id="selection-title">Subject A · Day 10</strong><span>Drag to compare · Move the pointer over the image before zooming</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="method" class="section wrap">
+      <div class="section-head"><span>03</span><h2>Method</h2></div>
+      <p class="section-intro">The system first learns a clean longitudinal trend, then turns a predicted time-dependent parameter into a localized pore deformation.</p>
+      <div class="study-design">
+        <div><span>Participants</span><strong>60 women</strong><small>22–34 years old</small></div>
+        <div><span>Study duration</span><strong>8 weeks</strong><small>4-week baseline + 4-week observation</small></div>
+        <div><span>Capture protocol</span><strong>3× daily</strong><small>After waking and after morning/evening face wash</small></div>
+        <div><span>Raw observations</span><strong>12,531</strong><small>Side-face images captured with an eMR device</small></div>
+      </div>
+      <div class="pipeline" aria-label="Method pipeline">
+        <div><b>01</b><strong>Clinical study</strong><small>12,531 images<br>60 subjects · 8 weeks</small></div><i>→</i>
+        <div><b>02</b><strong>Data cleaning</strong><small>Sliding-window filtering<br>3,025 clean images</small></div><i>→</i>
+        <div><b>03</b><strong>Pore segmentation</strong><small>UNet localizes the<br>editable pore region</small></div><i>→</i>
+        <div><b>04</b><strong>Trend prediction</strong><small>Random Forest predicts<br>time-dependent warp</small></div><i>→</i>
+        <div><b>05</b><strong>Local deformation</strong><small>Realistic change with<br>global structure preserved</small></div>
+      </div>
+      <div class="method-grid">
+        <article class="figure-card"><a href="assets/sliding-window.png" target="_blank"><img src="assets/sliding-window.png" alt="Sliding-window data cleaning"></a><h3>Clean the longitudinal signal</h3><p>A sliding-window procedure reduces measurement fluctuation while retaining the subject-specific skincare trend.</p></article>
+        <article class="figure-card"><a href="assets/segmentation-comparison.png" target="_blank"><img src="assets/segmentation-comparison.png" alt="Pore segmentation comparison"></a><h3>Locate pores precisely</h3><p>A learned segmentation model provides a stable pore mask, enabling edits to remain spatially constrained.</p></article>
+      </div>
+      <div class="method-notes">
+        <article><h3>Automatic label preparation</h3><p>A photocopy filter extracts facial detail, followed by morphological processing and thresholds for pore area, size, and shape. Manual checking refines the generated labels before UNet training.</p></article>
+        <article><h3>Time-dependent control</h3><p>Random Forest regression learns a subject-specific warping parameter from the initial skin condition and the selected time window.</p></article>
+        <article><h3>Efficient local deformation</h3><p>A modified Local Scaling Warp constructs a pixel-level flow field and applies bilinear interpolation. The optimized implementation processes a 1920 × 1080 image in 5–10 seconds.</p></article>
+      </div>
+    </section>
+
+    <section id="evaluation" class="section section-tint">
+      <div class="wrap">
+        <div class="section-head"><span>04</span><h2>Results &amp; evaluation</h2></div>
+        <div class="metrics">
+          <div><strong>0.5139</strong><span>Segmentation IoU</span></div><div><strong>0.9905</strong><span>R² at TW1</span></div><div><strong>3.41</strong><span>NIQE ↓</span></div><div><strong>&gt;90%</strong><span>Real / simulated judged similar</span></div>
+        </div>
+
+        <article class="eval-block"><div class="eval-copy"><p class="subnumber">4.1</p><h3>Pore segmentation</h3><p>The learned model improves pore localization over a Difference-of-Gaussians baseline across all reported measures.</p><table><thead><tr><th>Method</th><th>Dice ↑</th><th>IoU ↑</th><th>Precision ↑</th><th>Accuracy ↑</th></tr></thead><tbody><tr><td>DoG</td><td>0.4418</td><td>0.2851</td><td>0.4388</td><td>0.9896</td></tr><tr class="best"><td>Ours</td><td>0.6663</td><td>0.5139</td><td>0.6790</td><td>0.9936</td></tr></tbody></table></div><a class="eval-figure" href="assets/segmentation-comparison.png" target="_blank"><img src="assets/segmentation-comparison.png" alt="Segmentation comparison results"></a></article>
+
+        <article class="eval-block eval-text-only"><div class="eval-copy"><p class="subnumber">4.2</p><h3>Time-dependent prediction</h3><p>The Random Forest regression closely follows the cleaned clinical trends across all three time windows. The interactive comparison above contains the corresponding real and simulated images, so this section focuses on the quantitative evidence.</p><table><thead><tr><th>Window</th><th>R² ↑</th><th>MAE ↓</th></tr></thead><tbody><tr><td>TW1</td><td>0.9905</td><td>0.6344 ± 2.20</td></tr><tr><td>TW2</td><td>0.9941</td><td>0.6039 ± 1.85</td></tr><tr><td>TW3</td><td>0.9564</td><td>1.3498 ± 5.12</td></tr></tbody></table><div class="quality-inline"><span><strong>11.86</strong> PIQE ↓</span><span><strong>3.41</strong> NIQE ↓</span></div><a class="inline-link" href="#demo">Inspect all subjects and time windows in the interactive comparison ↑</a></div></article>
+
+        <article class="eval-block"><div class="eval-copy"><p class="subnumber">4.3</p><h3>Perceptual study</h3><p>Thirty respondents evaluated simulation realism and segmentation quality. More than 90% rated the real and simulated results as similar or very similar, and over 80% were satisfied with the simulation.</p></div><div class="study-pair"><a href="assets/segmentation-study.png" target="_blank"><img src="assets/segmentation-study.png" alt="Segmentation perception study"></a><a href="assets/simulation-study.png" target="_blank"><img src="assets/simulation-study.png" alt="Simulation perception study"></a></div></article>
+
+        <article class="eval-block reverse"><div class="eval-copy"><p class="subnumber">4.4</p><h3>Why local deformation?</h3><p>A direct GAN baseline can introduce broader appearance changes. The proposed approach explicitly confines the transformation to detected pore regions, improving control and interpretability.</p></div><a class="eval-figure" href="assets/gan-baseline.png" target="_blank"><img src="assets/gan-baseline.png" alt="GAN baseline comparison"></a></article>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap"><span>Facial Pore Simulation · Electronic Imaging 2023</span><a href="assets/FacialPoreSimulation-paper.pdf" target="_blank">Paper ↗</a></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>

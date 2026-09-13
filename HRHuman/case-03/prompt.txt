@@ -1,0 +1,6 @@
+    {
+        "full": "a close up of a man in a red shirt and black pants",
+        "body_structure": "a man",
+        "tops": "a close up of a man in a red shirt",
+        "bottoms": "a close up of a man in a red shirt and black pants"
+    },

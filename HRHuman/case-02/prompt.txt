@@ -1,0 +1,5 @@
+    {
+        "full": "a close up of a woman with a very long hair and a pretty make up",
+        "body_structure": "a woman",
+        "hair": "long hair"
+    },

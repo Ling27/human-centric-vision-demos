@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="FaceComposer: reference-based face composition with component-level control." />
+    <title>FaceComposer — Project Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top">FaceComposer</a>
+      <nav aria-label="Primary navigation">
+        <a href="#task">Task</a>
+        <a href="#demo">Demo</a>
+        <a href="#method">Method</a>
+        <a href="#evaluation">Evaluation</a>
+        <a href="https://github.com/Ling27/FaceComposer" target="_blank" rel="noreferrer">Code ↗</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="paper-header container">
+        <p class="venue">IJCNN 2026</p>
+        <h1>FaceComposer: Learning Coherent and Realistic<br class="desktop-only" /> Face Composition from References</h1>
+        <p class="authors">Ling Li, Lanqing Guo, Siyuan Yang, Yufei Wang, Qian Zheng, Alex C. Kot, Weisi Lin, Lihui Chen</p>
+        <div class="link-row">
+          <a class="primary-link" href="#demo">Interactive demo</a>
+          <a href="https://github.com/Ling27/FaceComposer" target="_blank" rel="noreferrer">Code</a>
+          <a href="assets/IJCNN2026_FaceComposer.pdf" target="_blank">Paper</a>
+        </div>
+        <p class="summary">Given a source portrait, a reference portrait, and a set of selected facial components, FaceComposer transfers the specified components while preserving source pose, expression, illumination, and facial context.</p>
+      </section>
+
+      <section class="task-section section" id="task">
+        <div class="container">
+          <div class="section-title"><span>01</span><h2>Task and motivation</h2></div>
+          <div class="task-definition">
+            <div class="task-copy">
+              <h3>Reference-based face composition</h3>
+              <p>The task is to synthesize a coherent portrait by transferring selected facial components—eyebrows, eyes, nose, or mouth—from a reference image into a source image.</p>
+            </div>
+            <div class="task-formula" aria-label="Task definition">
+              <span>I<sub>src</sub></span><b>+</b><span>I<sub>ref</sub></span><b>+</b><span>M<sub>components</sub></span><b>→</b><span>Î<sub>composite</sub></span>
+            </div>
+          </div>
+          <div class="motivation-grid">
+            <article>
+              <h3>Why this task?</h3>
+              <p>Fine-grained component control is useful for forensic sketching, presurgical visualization, and controllable digital media. Existing face editing methods primarily target global identity or attribute-level changes.</p>
+            </article>
+            <article>
+              <h3>Why is it difficult?</h3>
+              <p>Faces have rigid structural regularity, and viewers are highly sensitive to small distortions. Cross-identity differences in pose, scale, texture, illumination, and ethnicity amplify misalignment. More fundamentally, paired ground truth does not exist: there is no real target image that simultaneously preserves the source structure and context while containing the selected components of another identity.</p>
+            </article>
+            <article>
+              <h3>What must be balanced?</h3>
+              <p><strong>Local fidelity:</strong> the edited ROI should match the reference. <strong>Global coherence:</strong> non-edited attributes and ROI-context boundaries should remain natural.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section demo-section" id="demo">
+        <div class="container">
+          <div class="section-title"><span>02</span><h2>Interactive component selection</h2></div>
+          <p class="section-lead">Choose a source–reference pair, then select any single component or combination. Each selection displays its corresponding FaceComposer output.</p>
+
+          <div class="case-selector" role="group" aria-label="Select a source and reference pair">
+            <span>Example pair</span>
+            <button class="case-option active" type="button" data-case="case-01" aria-pressed="true">Case 01</button>
+            <button class="case-option" type="button" data-case="case-02" aria-pressed="false">Case 02</button>
+            <button class="case-option" type="button" data-case="case-03" aria-pressed="false">Case 03</button>
+          </div>
+
+          <div class="demo-layout">
+            <div class="inputs">
+              <figure>
+                <div class="figure-label">Source portrait</div>
+                <img id="source-portrait" src="case-01/01628_04393_source.png" alt="Source portrait for Case 01" />
+                <figcaption>Defines pose, expression, illumination, and context.</figcaption>
+              </figure>
+              <figure>
+                <div class="figure-label">Reference portrait</div>
+                <img id="reference-portrait" src="case-01/01628_04393_reference.png" alt="Reference portrait for Case 01" />
+                <figcaption>Provides the selected facial components.</figcaption>
+              </figure>
+            </div>
+
+            <div class="controls">
+              <h3>Components to transfer</h3>
+              <div class="component-grid">
+                <label class="component-option"><input type="checkbox" value="eyebrows" checked /><img src="components_assets/logo_eyebrows.png" alt="" aria-hidden="true" /><span>Eyebrows</span><b>✓</b></label>
+                <label class="component-option"><input type="checkbox" value="eyes" checked /><img src="components_assets/logo_eyes.png" alt="" aria-hidden="true" /><span>Eyes</span><b>✓</b></label>
+                <label class="component-option"><input type="checkbox" value="nose" checked /><img src="components_assets/logo_nose.png" alt="" aria-hidden="true" /><span>Nose</span><b>✓</b></label>
+                <label class="component-option"><input type="checkbox" value="mouth" checked /><img src="components_assets/logo_mouth.png" alt="" aria-hidden="true" /><span>Mouth</span><b>✓</b></label>
+              </div>
+              <p id="selection-summary" aria-live="polite">4 components selected</p>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-heading"><h3>Result</h3><span id="result-status">Ready</span></div>
+              <div class="comparison">
+                <img id="result-image" src="case-01/01628_04393_eyebrows_eyes_mouth_nose.png" alt="FaceComposer result for Case 01 with eyebrows, eyes, nose, and mouth transferred" />
+                <div class="before-layer" id="before-layer"><img id="comparison-source" src="case-01/01628_04393_source.png" alt="Source portrait for Case 01" /></div>
+                <div class="divider" id="divider"><span>↔</span></div>
+                <span class="comparison-label before-label">Source</span><span class="comparison-label after-label">Result</span>
+                <div class="processing-overlay" id="processing-overlay" aria-hidden="true"><span></span><p>Updating selected regions</p></div>
+              </div>
+              <label class="slider-label" for="comparison-slider"><span>Source</span><input id="comparison-slider" type="range" min="0" max="100" value="46" /><span>Result</span></label>
+            </div>
+          </div>
+          <p class="technical-note"><strong>Precomputed interactive demo.</strong> Every component selection maps to a separately generated FaceComposer result. With no component selected, the source portrait is shown unchanged.</p>
+        </div>
+      </section>
+
+      <section class="section method-section" id="method">
+        <div class="container">
+          <div class="section-title"><span>03</span><h2>Method</h2></div>
+          <p class="section-lead">The project page follows the paper pipeline: data-level augmentation, model-level context-aware fusion, and optimization-level multi-stage training.</p>
+          <figure class="pipeline-figure">
+            <img src="assets/paper-pipeline.png" alt="FaceComposer pipeline showing Component-Aware Augmentation, Context-Aware Face Fusion, Stage I reconstruction, and Stage II composition" />
+            <figcaption>Pipeline overview. Stage I learns source reconstruction; the frozen Stage I model produces pseudo composites for Stage II reference-guided training.</figcaption>
+          </figure>
+          <div class="method-grid">
+            <article><span>A</span><h3>Component-Aware Augmentation</h3><p>Photometric LAB perturbations and mild geometric transformations simulate cross-identity variations in color, pose, scale, and component placement.</p></article>
+            <article><span>B</span><h3>Context-Aware Face Fusion</h3><p>Reference ROIs and source context are processed as complementary fusion inputs, allowing both sides of the boundary to adapt instead of enforcing a rigid copy-paste operation.</p></article>
+            <article><span>C</span><h3>Multi-Stage Training</h3><p>Stage I learns self-reconstruction. Stage II uses hybrid supervision from pseudo composites and real reconstruction pairs to balance component fidelity and global coherence.</p></article>
+          </div>
+          <div class="implementation-strip">
+            <div><strong>10,000</strong><span>source-reference training pairs</span></div><div><strong>256 → 1024</strong><span>Stage I to Stage II resolution</span></div><div><strong>LoRA rank 256</strong><span>FLUX.1-Fill adaptation</span></div><div><strong>2,000</strong><span>held-out evaluation pairs</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section evaluation-section" id="evaluation">
+        <div class="container">
+          <div class="section-title"><span>04</span><h2>Results and evaluation</h2></div>
+          <p class="section-lead">The paper evaluates three distinct requirements: reference fidelity inside the edited ROI, source consistency in the surrounding context, and smoothness at the ROI-context boundary.</p>
+          <div class="metric-definitions">
+            <article><h3>ROI fidelity</h3><p>LPIPS, SSIM, and CLIP compare the edited components with the reference.</p></article>
+            <article><h3>Context consistency</h3><p>LPIPS, SSIM, and CLIP measure agreement with the non-edited source face.</p></article>
+            <article><h3>Boundary coherence</h3><p>SobelDiff and LapDiff quantify first- and second-order discontinuities around the edited ROI.</p></article>
+            <article><h3>Global realism</h3><p>FID evaluates the distribution-level realism of complete generated portraits.</p></article>
+          </div>
+
+          <article class="result-block">
+            <div class="result-copy"><p class="result-index">4.1</p><h3>Comparison with existing methods</h3><p>FaceComposer retains fine reference details while reducing boundary artifacts, copy-paste effects, and structural distortions seen in general insertion and reference-editing baselines.</p></div>
+            <figure><a class="figure-link" href="assets/qualitative-comparison.webp" target="_blank" aria-label="Open qualitative comparison at full resolution"><img src="assets/qualitative-comparison.webp" alt="Qualitative comparison between FaceComposer and baseline methods" /></a><figcaption>Paper Fig. 2 — qualitative comparison on CelebAMask-HQ and FFHQ. Click the figure to inspect at full resolution.</figcaption></figure>
+          </article>
+          <article class="result-block">
+            <div class="result-copy"><p class="result-index">4.2</p><h3>Quantitative evaluation</h3><p>FaceComposer achieves the best global FID on both datasets (27.88 on CelebAMask-HQ; 25.68 on FFHQ) and leading ROI and boundary performance.</p><p class="result-caveat">Context scores are not the sole objective: the method allows source context and transferred ROI to mutually adapt, prioritizing global harmony over rigid pixel preservation.</p></div>
+            <figure><a class="figure-link" href="assets/quantitative-table.png" target="_blank" aria-label="Open quantitative table at full resolution"><img src="assets/quantitative-table.png" alt="Quantitative evaluation table from the FaceComposer paper" /></a><figcaption>Paper Table I — ROI, context, boundary, and global metrics. Click the table to inspect at full resolution.</figcaption></figure>
+          </article>
+          <article class="result-block">
+            <div class="result-copy"><p class="result-index">4.3</p><h3>Why two training stages?</h3><p>Stage II corrects boundary seams, color inconsistency, and unfaithful transfer remaining after Stage I reconstruction training.</p></div>
+            <figure><a class="figure-link" href="assets/cross_stage_v2.webp" target="_blank" aria-label="Open Stage I and Stage II comparison at full resolution"><img src="assets/cross_stage_v2.webp" alt="Stage I and Stage II qualitative comparison" /></a><figcaption>Paper Fig. 3 — Stage I versus Stage II. Click the figure to inspect at full resolution.</figcaption></figure>
+          </article>
+          <article class="result-block">
+            <div class="result-copy"><p class="result-index">4.4</p><h3>User study</h3><p>Across 26 participants and 30 comparative image sets, FaceComposer was preferred by 74.7% for component similarity, 54.7% for blending, and 51.8% for overall realism.</p></div>
+            <figure><a class="figure-link" href="assets/userStudy_part1_v2.webp" target="_blank" aria-label="Open user study figure at full resolution"><img src="assets/userStudy_part1_v2.webp" alt="User preference results across component similarity, identity preservation, blending quality, and realism" /></a><figcaption>Paper Fig. 4 — comparative user preference. Click the figure to inspect at full resolution.</figcaption></figure>
+          </article>
+          <div class="ablation-summary"><h3>Ablation findings</h3><p>Photometric and geometric augmentation improve cross-appearance robustness. Adding Context-Aware Face Fusion produces the best trade-off in ROI fidelity and global FID. A balanced Stage II mixture (τ = 0.5) gives the best FID.</p></div>
+        </div>
+      </section>
+    </main>
+    <footer><div class="container"><strong>FaceComposer</strong><span>Reference-based face composition · IJCNN 2026</span><a href="https://github.com/Ling27/FaceComposer" target="_blank" rel="noreferrer">GitHub ↗</a></div></footer>
+    <script src="app.js"></script>
+  </body>
+</html>

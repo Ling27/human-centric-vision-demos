@@ -1,0 +1,3 @@
+.comparison.single-view .before-layer,.comparison.single-view .divider,.comparison.single-view .before-label{display:none}.comparison.single-view .after-label{left:9px;right:auto}.compare-range{display:none}.divider{cursor:ew-resize;touch-action:none;outline:none}.divider:focus-visible span{outline:3px solid rgba(57,118,96,.35);outline-offset:3px}
+.case-options{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}.case-options button{padding:9px 4px;border:0;border-right:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}.case-options button:last-child{border-right:0}.case-options button:hover{color:var(--accent)}.case-options button.active{background:var(--accent);color:#fff}
+.template-card[hidden]{display:none}
