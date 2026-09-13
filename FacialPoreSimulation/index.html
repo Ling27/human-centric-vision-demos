@@ -8,6 +8,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2242%22 fill=%22%231f6b55%22/><circle cx=%2250%22 cy=%2250%22 r=%2212%22 fill=%22white%22/></svg>">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="playground-layout.css">
+  <link rel="stylesheet" href="comparison-interaction.css">
 </head>
 <body>
   <header class="site-header">
@@ -40,28 +41,20 @@
     <section id="demo" class="section section-tint">
       <div class="wrap">
         <div class="section-head"><span>02</span><h2>Interactive comparison</h2></div>
-        <p class="section-intro">Select a participant and time window, then drag the divider to compare the observed image with the simulated result.</p>
+        <p class="section-intro">Select a participant and time window to inspect the initial condition, real observation, and simulated result as separate images.</p>
         <div class="playground">
           <aside class="controls">
             <fieldset><legend>Subject</legend><div class="segmented" id="subject-controls"><button class="active" data-subject="a">A</button><button data-subject="b">B</button><button data-subject="c">C</button></div></fieldset>
             <fieldset><legend>Time window</legend><div class="segmented" id="time-controls"><button class="active" data-time="tw10">Day 10</button><button data-time="tw20">Day 20</button><button data-time="tw30">Day 30</button></div></fieldset>
-            <div class="zoom-control"><label class="zoom-label" for="zoom">Zoom <output id="zoom-value">1.0×</output></label><input id="zoom" type="range" min="1" max="2.5" step="0.1" value="1"></div>
           </aside>
           <div class="baseline-panel">
             <p class="panel-label">Initial condition</p>
-            <div class="baseline"><img id="baseline-image" src="cases/a-baseline.png" alt="Initial facial image for Subject A"></div>
-            <div class="viewer-note"><strong>Baseline image</strong><span>Before skincare use</span></div>
+            <div class="baseline" id="baseline-view"><img id="baseline-image" src="cases/a-baseline.png" alt="Initial facial image for Subject A"></div>
+            <div class="individual-zoom"><label for="baseline-zoom">Zoom <output id="baseline-zoom-value">1.0×</output></label><input id="baseline-zoom" type="range" min="1" max="2.5" step="0.1" value="1"></div>
           </div>
-          <div class="viewer-column">
-            <p class="panel-label">Target condition</p>
-            <div class="compare" id="compare" style="--position:50%;--zoom:1">
-              <img id="sim-image" class="compare-image" src="cases/a-tw10-simulated.png" alt="Simulated result">
-              <div class="real-layer"><img id="real-image" class="compare-image" src="cases/a-tw10-real.png" alt="Real observation"></div>
-              <span class="tag tag-left">Real</span><span class="tag tag-right">Simulated</span><div class="divider" aria-hidden="true"></div>
-              <input id="comparison-slider" aria-label="Compare real and simulated images" type="range" min="0" max="100" value="50">
-            </div>
-            <div class="viewer-note"><strong id="selection-title">Subject A · Day 10</strong><span>Drag to compare · Move the pointer over the image before zooming</span></div>
-          </div>
+          <div class="result-panel"><p class="panel-label">Real observation</p><div class="independent-view" id="real-view"><img id="real-image" src="cases/a-tw10-real.png" alt="Real observation"></div><div class="individual-zoom"><label for="real-zoom">Zoom <output id="real-zoom-value">1.0×</output></label><input id="real-zoom" type="range" min="1" max="2.5" step="0.1" value="1"></div></div>
+          <div class="result-panel"><p class="panel-label">Simulated result</p><div class="independent-view" id="sim-view"><img id="sim-image" src="cases/a-tw10-simulated.png" alt="Simulated result"></div><div class="individual-zoom"><label for="sim-zoom">Zoom <output id="sim-zoom-value">1.0×</output></label><input id="sim-zoom" type="range" min="1" max="2.5" step="0.1" value="1"></div></div>
+          <div class="selection-note"><strong id="selection-title">Subject A · Day 10</strong><span>The three images are shown independently because their capture positions are not spatially aligned. After zooming, double-click any image to center its region.</span></div>
         </div>
       </div>
     </section>
