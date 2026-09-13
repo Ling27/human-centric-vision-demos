@@ -106,11 +106,11 @@
               <div class="comparison">
                 <img id="result-image" src="case-01/01628_04393_eyebrows_eyes_mouth_nose.png" alt="FaceComposer result for Case 01 with eyebrows, eyes, nose, and mouth transferred" />
                 <div class="before-layer" id="before-layer"><img id="comparison-source" src="case-01/01628_04393_source.png" alt="Source portrait for Case 01" /></div>
-                <div class="divider" id="divider"><span>↔</span></div>
+                <div class="divider" id="divider" role="slider" tabindex="0" aria-label="Source and result comparison divider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="46"><span>↔</span></div>
                 <span class="comparison-label before-label">Source</span><span class="comparison-label after-label">Result</span>
                 <div class="processing-overlay" id="processing-overlay" aria-hidden="true"><span></span><p>Updating selected regions</p></div>
               </div>
-              <label class="slider-label" for="comparison-slider"><span>Source</span><input id="comparison-slider" type="range" min="0" max="100" value="46" /><span>Result</span></label>
+              <input id="comparison-slider" class="comparison-value" type="range" min="0" max="100" value="46" tabindex="-1" aria-hidden="true" />
             </div>
           </div>
           <p class="technical-note"><strong>Precomputed interactive demo.</strong> Every component selection maps to a separately generated FaceComposer result. With no component selected, the source portrait is shown unchanged.</p>

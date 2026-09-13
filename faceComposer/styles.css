@@ -70,6 +70,9 @@ figcaption { margin-top:8px; color:var(--muted); font-size:12px; line-height:1.4
 .before-label { left:9px; } .after-label { right:9px; }
 .slider-label { display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; margin-top:10px; color:var(--muted); font-size:11px; }
 .slider-label input { width:100%; accent-color:var(--accent); }
+.comparison-value { display:none; }
+.divider { z-index:5; cursor:ew-resize; touch-action:none; outline:none; }
+.divider:focus-visible span { outline:3px solid color-mix(in srgb,var(--accent) 35%,transparent); outline-offset:3px; }
 .processing-overlay { position:absolute; inset:0; display:grid; place-content:center; justify-items:center; gap:10px; background:rgba(255,255,255,.88); opacity:0; pointer-events:none; transition:opacity .15s; }
 .processing-overlay.active { opacity:1; }
 .processing-overlay span { width:30px; height:30px; border:2px solid #ccd2dc; border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; }
